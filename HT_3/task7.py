@@ -19,6 +19,7 @@ def simple_calculator(last_result='None'):
                   "Or you can input 'exit' for finish or 'help' to watch available actions.\n") or ' '
     if start == 'exit':
         print('Thanks, goodbye!')
+        return
     elif start == ' ':
         simple_calculator()
     elif start == 'help':
@@ -26,7 +27,7 @@ def simple_calculator(last_result='None'):
         simple_calculator()
     else:
 
-        if start.split()[0].isdigit() and len(start.split()) == 3:
+        if (start.split()[0].isdigit() or start.split()[0][0] == '-') and len(start.split()) == 3:
             first_value, action, second_value = start.split()
         elif last_result != 'None' and len(start.split()) == 2:
             first_value = last_result
