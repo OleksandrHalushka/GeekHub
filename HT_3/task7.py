@@ -44,6 +44,7 @@ def simple_calculator(last_result='None'):
             print(int(result))
         else:
             (print(result))
+        print(f'Now you can use {result} as first arg')
         simple_calculator(last_result=result)
 
 
