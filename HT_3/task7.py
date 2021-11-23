@@ -3,7 +3,7 @@
 """
 
 
-def simple_calculator():
+def simple_calculator(last_result='None'):
     operators = {
         '+': lambda x, y: x + y,
         '-': lambda x, y: x - y,
@@ -25,7 +25,15 @@ def simple_calculator():
         print(*operators)
         simple_calculator()
     else:
-        first_value, action, second_value = start.split()
+
+        if start.split()[0].isdigit():
+            first_value, action, second_value = start.split()
+        elif last_result != 'None':
+            first_value = last_result
+            action, second_value = start.split()
+        else:
+            print('Something wrong')
+            simple_calculator()
         first_value = float(first_value)
         second_value = float(second_value)
         if action in ('/', '//') and second_value == 0:
@@ -36,7 +44,7 @@ def simple_calculator():
             print(int(result))
         else:
             (print(result))
-        simple_calculator()
+        simple_calculator(last_result=result)
 
 
 if __name__ == '__main__':
