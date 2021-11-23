@@ -28,6 +28,9 @@ def simple_calculator():
         first_value, action, second_value = start.split()
         first_value = float(first_value)
         second_value = float(second_value)
+        if action in ('/', '//') and second_value == 0:
+            print('Division by zero is not possible!')
+            simple_calculator()
         result = operators[action](first_value, second_value)
         if result.is_integer():
             print(int(result))
