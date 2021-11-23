@@ -42,9 +42,10 @@ def simple_calculator(last_result='None'):
         result = operators[action](first_value, second_value)
         if result.is_integer():
             print(int(result))
+            print(f'Now you can use {result} as first arg')
         else:
             (print(result))
-        print(f'Now you can use {result} as first arg')
+            print(f'Now you can use {result} as first arg')
         simple_calculator(last_result=result)
 
 
