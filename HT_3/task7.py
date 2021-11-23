@@ -26,7 +26,7 @@ def simple_calculator(last_result='None'):
         simple_calculator()
     else:
 
-        if start.split()[0].isdigit():
+        if start.split()[0].isdigit() and len(start.split()) == 3:
             first_value, action, second_value = start.split()
         elif last_result != 'None':
             first_value = last_result
