@@ -3,7 +3,7 @@
 """
 
 
-def simple_calculator(last_result='None'):
+def simple_calculator(last_result='None', last_action='None'):
     operators = {
         '+': lambda x, y: x + y,
         '-': lambda x, y: x - y,
@@ -20,14 +20,15 @@ def simple_calculator(last_result='None'):
     if start == 'exit':
         print('Thanks, goodbye!')
         return
-    elif start == ' ':
-        simple_calculator()
+
     elif start == 'help':
         print(*operators)
         simple_calculator()
     else:
-
-        if (start.split()[0].isdigit() or start.split()[0][0] == '-') and len(start.split()) == 3:
+        if start == ' ' and last_result != 'None':
+            first_value = last_result
+            action, second_value = last_action.split()
+        elif (start.split()[0].isdigit() or start.split()[0][0] == '-') and len(start.split()) == 3:
             first_value, action, second_value = start.split()
         elif last_result != 'None' and len(start.split()) == 2:
             first_value = last_result
@@ -47,7 +48,9 @@ def simple_calculator(last_result='None'):
         else:
             (print(result))
             print(f'Now you can use {result} as first arg')
-        simple_calculator(last_result=result)
+        fin_action = (action, str(second_value))
+        str_this_action = ' '.join(fin_action)
+        simple_calculator(last_result=result, last_action=str_this_action)
 
 
 if __name__ == '__main__':
