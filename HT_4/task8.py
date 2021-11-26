@@ -20,8 +20,7 @@ def cyclic_shift_hard(some_list, *, shift=0):
 
 
 def cyclic_shift_light(some_list, *, shift=0):
-    if abs(shift) > len(some_list):
-        return f'Please, input some number in range -{len(some_list)} - {len(some_list)}'
+    shift = shift % len(some_list)
     if shift == 0:
         return some_list
     our_list = some_list.copy()
