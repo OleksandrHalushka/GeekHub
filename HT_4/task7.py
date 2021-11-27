@@ -9,7 +9,7 @@ def elements_counter(some_list):
     unique_list = []
     for element in some_list:
         if element not in unique_list:
-            unique_list.append([element, 1])
+            unique_list.append([element, 0])
     for i in range(len(unique_list)):
         for trash in some_list:
             if unique_list[i][0] == trash:
@@ -20,7 +20,7 @@ def elements_counter(some_list):
     if len(countered_list) == 0:
         print('Oll elements are unique')
     elif len(countered_list) == 1:
-        print('There is one repeating element')
+        print(f'There is one repeating element {countered_list[0]}')
     else:
         print(f'There are {len(countered_list)} repeating elements')
     for element in countered_list:
