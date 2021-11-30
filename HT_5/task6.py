@@ -56,7 +56,7 @@ def custom_range(*args):
 
 if __name__ == '__main__':
     try:
-        [print(i) for i in custom_range(10, -10)]
+        print([i for i in custom_range(10, -10)])
     except WrongDirectionException:
         print('Wrong direction, please, change last argument')
     except NoArgumentException:
