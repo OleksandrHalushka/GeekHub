@@ -64,14 +64,16 @@ if __name__ == '__main__':
         try:
             name_password_validator(name, try_dict[name])
         except ShortNameException:
-            print('Name is too short')
+            print(f'Name: {name},\nPassword: {try_dict[name]}\nStatus: Name is too short')
         except LongNameException:
-            print('Name is too long')
+            print(f'Name: {name},\nPassword: {try_dict[name]}\nStatus: Name is too long')
         except PasswordLenException:
-            print('Password too short')
+            print(f'Name: {name},\nPassword: {try_dict[name]}\nStatus: Password too short')
         except NoDigitPasswordException:
-            print('There is no digits in password')
+            print(f'Name: {name},\nPassword: {try_dict[name]}\nStatus: There is no digits in password')
         except NameInPasswordException:
-            print(f'There is name {name} in password')
+            print(f'Name: {name},\nPassword: {try_dict[name]}\nStatus: There is name {name} in password')
         else:
-            print('OK')
+            print(f'Name: {name},\nPassword: {try_dict[name]}\nStatus: OK')
+        finally:
+            print('_______________________________________')
