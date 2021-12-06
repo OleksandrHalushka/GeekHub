@@ -1,0 +1,1 @@
+{"transaction": "new_user", "date": "2021-12-07 00:17:10.586230", "balance_before": 0, "balance_after": 0}
