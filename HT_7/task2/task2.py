@@ -36,7 +36,7 @@ def symbols_parser(file, amount):
         central_part = string[(len(string)//2 - amount//2):(len(string)//2 + amount//2)]
     else:
         central_part = string[(len(string) // 2 - amount // 2):(len(string) // 2 + amount // 2 + 1)]
-    print(left_part, central_part, right_part)
+    print([left_part, central_part, right_part])
 
 
 if __name__ == '__main__':
