@@ -32,7 +32,7 @@ class NegativeMeaning(Exception):
 
 
 def finish(login):
-    return 'Thank you, good luck!'
+    print('Thank you, good luck!')
 
 
 def new_user(login):
@@ -114,7 +114,11 @@ def add_money(login):
                            'balance_after': new_balance}
             transaction = json.dumps(transaction)
             transactions.write(f'{transaction}\n')
-    return f'Thank your for using our ATM, you add {summ}, and now your balance is {new_balance}'
+    print(f'Thank your for using our ATM, you add {summ}, and now your balance is {new_balance}')
+    if input('do ypu want to continue (print yes or no)' ) == 'yes':
+        menu(login)
+    else:
+        exit(login)
 
 
 def withdraw_money(login):
@@ -124,7 +128,11 @@ def withdraw_money(login):
     with open(f'{login}_balance.txt', 'r', encoding='utf-8') as balance:
         old_balance = int(balance.readline())
         if summ > old_balance:
-            return f'You don`t have enough money on the balance'
+            print(f'You don`t have enough money on the balance')
+            if input('do ypu want to continue (print yes or no)') == 'yes':
+                menu(login)
+            else:
+                exit(login)
         else:
             new_balance = old_balance - summ
         with open(f'{login}_balance.txt', 'w', encoding='utf-8') as balance:
@@ -136,31 +144,39 @@ def withdraw_money(login):
                                'balance_after': new_balance}
                 transaction = json.dumps(transaction)
                 transactions.write(f'{transaction}\n')
-        return f'Thank your for using our ATM, you withdraw {summ}, and now your balance is {new_balance}'
+        print(f'Thank your for using our ATM, you withdraw {summ}, and now your balance is {new_balance}')
+        if input('do ypu want to continue (print yes or no) ') == 'yes':
+            menu(login)
+        else:
+            exit(login)
+
+
+def menu(login):
+    choice = input('if you want:\n'
+                   'Withdraw money - press 1\n'
+                   'Add money on your account - press 2\n'
+                   'Check your account - press 3\n'
+                   'For exit press 4\n'
+                   )
+    choices = {
+        '1': withdraw_money,
+        '2': add_money,
+        '3': show_balance,
+        '4': finish
+
+    }
+    return choices[choice](login)
 
 
 def start():
     if input('Do you have an account? (print yes or no) ') == 'yes':
         login = input('Hello, please input your login: ')
         if authenticated(login):
-            choice = input('if you want:\n'
-                           'Withdraw money - press 1\n'
-                           'Add money on your account - press 2\n'
-                           'Check your account - press 3\n'
-                           'For exit press 4\n'
-                           )
-            choices = {
-                '1': withdraw_money,
-                '2': add_money,
-                '3': show_balance,
-                '4': finish
-
-            }
-            print(choices[choice](login))
+            menu(login)
     else:
         if input('Do you want to register an account?(print yes or no) ') == 'yes':
-                login = input('Input your login here ')
-                new_user(login)
+            login = input('Input your login here ')
+            new_user(login)
 
 
 if __name__ == '__main__':
