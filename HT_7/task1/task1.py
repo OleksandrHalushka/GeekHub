@@ -72,6 +72,7 @@ def authenticated(login):
                         if attempt != 2:
                             print(f'Incorrect password, try again, you have {2 - attempt} attempts ')
                 else:
+                    print('Too many attempts')
                     return False
         else:
             print('Your name is incorrect, or you not registered, do you want to registrate in our system?')
