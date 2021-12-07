@@ -4,3 +4,6 @@
 
 {"transaction": "withdrawing 100", "date": "2021-12-07 19:20:09.356036", "balance_before": 100500, "balance_after": 100400}
 {"transaction": "adding 100", "date": "2021-12-07 19:20:19.378959", "balance_before": 100400, "balance_after": 100500}
+{"transaction": "withdrawing 100", "date": "2021-12-07 19:35:50.663420", "balance_before": 100000, "balance_after": 99900}
+{"transaction": "withdrawing 220", "date": "2021-12-07 19:37:17.761211", "balance_before": 99900, "balance_after": 99680}
+{"transaction": "withdrawing 100", "date": "2021-12-07 19:44:02.140662", "balance_before": 99680, "balance_after": 99580}

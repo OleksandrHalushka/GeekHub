@@ -118,7 +118,7 @@ def add_money(login):
     if input('do ypu want to continue (print yes or no)' ) == 'yes':
         menu(login)
     else:
-        exit(login)
+        finish(login)
 
 
 def withdraw_money(login):
@@ -129,21 +129,21 @@ def withdraw_money(login):
         old_balance = int(balance.readline())
         if summ > old_balance:
             print(f'You don`t have enough money on the balance')
-            if input('do ypu want to continue (print yes or no)') == 'yes':
+            if input('do you want to continue (print yes or no)') == 'yes':
                 menu(login)
             else:
                 exit(login)
         else:
             new_balance = old_balance - summ
-        with open(f'{login}_balance.txt', 'w', encoding='utf-8') as balance:
-            balance.write(str(new_balance))
-            with open(f'{login}_transaction.txt', 'a', encoding='utf-8') as transactions:
-                transaction = {'transaction': f'withdrawing {summ}',
-                               'date': str(datetime.datetime.now()),
-                               'balance_before': old_balance,
-                               'balance_after': new_balance}
-                transaction = json.dumps(transaction)
-                transactions.write(f'{transaction}\n')
+    with open(f'{login}_balance.txt', 'w', encoding='utf-8') as balance:
+        balance.write(str(new_balance))
+        with open(f'{login}_transaction.txt', 'a', encoding='utf-8') as transactions:
+            transaction = {'transaction': f'withdrawing {summ}',
+                            'date': str(datetime.datetime.now()),
+                            'balance_before': old_balance,
+                            'balance_after': new_balance}
+            transaction = json.dumps(transaction)
+            transactions.write(f'{transaction}\n')
         print(f'Thank your for using our ATM, you withdraw {summ}, and now your balance is {new_balance}')
         if input('do ypu want to continue (print yes or no) ') == 'yes':
             menu(login)
@@ -165,7 +165,7 @@ def menu(login):
         '4': finish
 
     }
-    return choices[choice](login)
+    choices[choice](login)
 
 
 def start():
