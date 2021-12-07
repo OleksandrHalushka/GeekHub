@@ -148,7 +148,7 @@ def withdraw_money(login):
         if input('do ypu want to continue (print yes or no) ') == 'yes':
             menu(login)
         else:
-            exit(login)
+            finish(login)
 
 
 def menu(login):
