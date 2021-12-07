@@ -35,6 +35,33 @@ def finish(login):
     print('Thank you, good luck!')
 
 
+def blocker(login):
+    status = open(f'{login}_status.txt', 'w', encoding='utf-8')
+    status.write('Blocked')
+    status.close()
+    print('Your account was blocked')
+    finish(login)
+
+
+def unblocker(login):
+    print('To unlock your account, answer the secret question: ')
+    answer = input('What is the best programming language is the best? ')
+    if answer == 'python' or 'Python':
+        status = open(f'{login}_status.txt', 'w', encoding='utf-8')
+        status.write('Active')
+        status.close()
+        print('Account unlocked!')
+        start()
+    elif answer == 'js' or 'javascript' or 'JS' or 'Javascript':
+        balance = open(f'{login}_balance.txt', 'w', encoding='utf-8')
+        balance.write('0')
+        balance.close()
+        print('WTF? Your balance was reset')
+        finish(login)
+    else:
+        print('Sorry, answer is incorrect, try again later!')
+
+
 def new_user(login):
     with open('users_data.csv', 'r', encoding='utf-8') as users:
         users = csv.DictReader(users)
@@ -52,11 +79,14 @@ def new_user(login):
     balance = open(f'{login}_balance.txt', 'w', encoding='utf-8')
     balance.write('0')
     users = open('users_data.csv', 'a', encoding='utf-8')
+    status = open(f'{login}_status.txt', 'w', encoding='utf-8')
+    status.write('Active')
     user = csv.writer(users)
     user.writerow([login, password])
     users.close()
     transactions.close()
     balance.close()
+    status.close()
     start()
 
 
@@ -73,7 +103,7 @@ def authenticated(login):
                             print(f'Incorrect password, try again, you have {2 - attempt} attempts ')
                 else:
                     print('Too many attempts')
-                    return False
+                    return blocker(login)
         else:
             print('Your name is incorrect, or you not registered, do you want to registrate in our system?')
             answer = input('If you want to registrate - input "yes", or press enter to exit ')
@@ -171,8 +201,13 @@ def menu(login):
 def start():
     if input('Do you have an account? (print yes or no) ') == 'yes':
         login = input('Hello, please input your login: ')
-        if authenticated(login):
-            menu(login)
+        status = open(f'{login}_status.txt', 'r', encoding='utf-8')
+        if status.readline().rstrip() == 'Active':
+            if authenticated(login):
+                menu(login)
+        else:
+            if input('Your account was blocked, do you want to try to unblock? (yes / no )') == 'yes':
+                unblocker(login)
     else:
         if input('Do you want to register an account?(print yes or no) ') == 'yes':
             login = input('Input your login here ')
