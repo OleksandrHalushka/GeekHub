@@ -132,7 +132,7 @@ def withdraw_money(login):
             if input('do you want to continue (print yes or no)') == 'yes':
                 menu(login)
             else:
-                exit(login)
+                finish(login)
         else:
             new_balance = old_balance - summ
     with open(f'{login}_balance.txt', 'w', encoding='utf-8') as balance:
