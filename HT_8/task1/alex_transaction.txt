@@ -1,0 +1,19 @@
+{"transaction": "new_user", "date": "2021-12-06 23:15:25.180902", "balance_before": 0, "balance_after": 0}
+{"transaction": "withdrawing 100", "date": "2021-12-07 00:01:31.198527", "balance_before": 100500, "balance_after": 100400}
+{"transaction": "adding 100", "date": "2021-12-07 00:15:47.802102", "balance_before": 100400, "balance_after": 100500}
+{"transaction": "withdrawing 100", "date": "2021-12-07 19:20:09.356036", "balance_before": 100500, "balance_after": 100400}
+{"transaction": "adding 100", "date": "2021-12-07 19:20:19.378959", "balance_before": 100400, "balance_after": 100500}
+{"transaction": "withdrawing 100", "date": "2021-12-07 19:35:50.663420", "balance_before": 100000, "balance_after": 99900}
+{"transaction": "withdrawing 220", "date": "2021-12-07 19:37:17.761211", "balance_before": 99900, "balance_after": 99680}
+{"transaction": "withdrawing 100", "date": "2021-12-07 19:44:02.140662", "balance_before": 99680, "balance_after": 99580}
+{"transaction": "withdrawing 100", "date": "2021-12-07 19:45:34.038333", "balance_before": 99580, "balance_after": 99480}
+{"transaction": "withdrawing 100", "date": "2021-12-07 19:47:06.872546", "balance_before": 99480, "balance_after": 99380}
+{"transaction": "withdrawing 1500", "date": "2021-12-10 00:48:16.729325", "balance_before": 99380, "balance_after": 97880}
+{"transaction": "withdrawing 1500", "date": "2021-12-10 00:50:24.206856", "balance_before": 97880, "balance_after": 96380}
+{"transaction": "withdrawing 1300", "date": "2021-12-10 00:51:36.023024", "balance_before": 96380, "balance_after": 95080}
+{"transaction": "withdrawing 40", "date": "2021-12-10 00:52:14.483711", "balance_before": 95080, "balance_after": 95040}
+{"transaction": "withdrawing 1500", "date": "2021-12-10 00:53:01.432342", "balance_before": 95040, "balance_after": 93540}
+{"transaction": "withdrawing 40", "date": "2021-12-10 00:54:06.743392", "balance_before": 93540, "balance_after": 93500}
+{"transaction": "withdrawing 40", "date": "2021-12-10 00:57:08.075079", "balance_before": 93500, "balance_after": 93460}
+{"transaction": "withdrawing 540", "date": "2021-12-10 00:59:50.724765", "balance_before": 93460, "balance_after": 92920}
+{"transaction": "withdrawing 570", "date": "2021-12-10 01:01:02.436726", "balance_before": 92920, "balance_after": 92350}
