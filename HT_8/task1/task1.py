@@ -68,6 +68,7 @@ def checking_denominations(login):
 
 def finish(login):
     print('Thank you, good luck!')
+    return
 
 
 def blocker(login):
