@@ -308,9 +308,11 @@ def start():
         if user_status == 'Collector':
             if authenticated(login):
                 collectors_menu(login)
-        else:
+        if user_status == 'Blocked':
             if input('Your account was blocked, do you want to try to unblock? (yes / no )') == 'yes':
                 unblocker(login)
+        else:
+            finish(login)
     else:
         if input('Do you want to register an account?(print yes or no) ') == 'yes':
             login = input('Input your login here ')
