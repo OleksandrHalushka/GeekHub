@@ -106,9 +106,10 @@ def unblocker(login):
 def new_user(login):
     with open('users_data.csv', 'r', encoding='utf-8') as users:
         users = csv.DictReader(users)
-        if login in users:
-            print('Name is already registered, please try again with unique name')
-            return False
+        for user in users:
+            if user['login'] == login:
+                print('Name is already registered, please try again with unique name')
+                return False
     password = input(f'{login}, input your password here:')
     transactions = open(f'{login}_transaction.txt', 'w', encoding='utf-8')
     transaction = {'transaction': 'new_user',
