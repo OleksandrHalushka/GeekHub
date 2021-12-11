@@ -77,6 +77,7 @@ def checking_denominations(login):
 
 def finish(login):
     print('Thank you, good luck!')
+    exit()
 
 
 def blocker(login):
@@ -250,6 +251,7 @@ def withdraw_money(login):
                 menu(login)
             else:
                 finish(login)
+                break
     new_balance = old_balance - summ
     with open(f'{login}_balance.txt', 'w', encoding='utf-8') as balance:
         balance.write(str(new_balance))
