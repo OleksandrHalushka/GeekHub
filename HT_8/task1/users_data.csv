@@ -1,6 +1,7 @@
-login,password
-alex,password
-user,password
-collector,password
-yevhenii,qwerty
-
+login,password
+alex,password
+user,password
+collector,password
+yevhenii,qwerty
+newuser,newpassword
+same_name,same_password

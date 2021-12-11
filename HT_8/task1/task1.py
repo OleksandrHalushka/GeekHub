@@ -34,6 +34,15 @@ class NegativeMeaning(Exception):
     pass
 
 
+def password_validator():
+    password_1 = input('Input your new password here: ')
+    password_2 = input('Repeat new password: ')
+    if password_1 == password_2:
+        return password_1
+    else:
+        return password_validator()
+
+
 def elements_counter(some_list):
     counter = Counter()
     for element in some_list:
@@ -68,7 +77,6 @@ def checking_denominations(login):
 
 def finish(login):
     print('Thank you, good luck!')
-    return
 
 
 def blocker(login):
@@ -111,7 +119,7 @@ def new_user(login):
             if user['login'] == login:
                 print('Name is already registered, please try again with unique name')
                 return False
-    password = input(f'{login}, input your password here:')
+    password = password_validator()
     transactions = open(f'{login}_transaction.txt', 'w', encoding='utf-8')
     transaction = {'transaction': 'new_user',
                    'date': str(datetime.datetime.now()),
@@ -271,15 +279,38 @@ def menu(login):
                    'Add money on your account - press 2\n'
                    'Check your account - press 3\n'
                    'For exit press 4\n'
+                   'For changing password press 5\n'
                    )
     choices = {
         '1': withdraw_money,
         '2': add_money,
         '3': show_balance,
-        '4': finish
+        '4': finish,
+        '5': change_password
 
     }
     choices[choice](login)
+
+
+def change_password(login):
+    if authenticated(login):
+        new_password = password_validator()
+        with open('users_data.csv', 'r', encoding='utf-8') as users:
+            users = csv.DictReader(users)
+            new_users = [user for user in users]
+            for user in new_users:
+                if user['login'] == login:
+                    user['password'] = new_password
+        with open('users_data.csv', 'w', encoding='utf-8') as users:
+            user_writer = csv.DictWriter(users, fieldnames=['login', 'password'])
+            user_writer.writeheader()
+            for new_user in new_users:
+                user_writer.writerow(new_user)
+        print('Your password was changed!')
+        if input('Do you want to continue? (yes/no)') == 'yes':
+            menu(login)
+        else:
+            finish(login)
 
 
 def collectors_menu(login):
@@ -311,8 +342,6 @@ def start():
         if user_status == 'Blocked':
             if input('Your account was blocked, do you want to try to unblock? (yes / no )') == 'yes':
                 unblocker(login)
-        else:
-            finish(login)
     else:
         if input('Do you want to register an account?(print yes or no) ') == 'yes':
             login = input('Input your login here ')
