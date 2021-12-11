@@ -255,6 +255,7 @@ def withdraw_money(login):
     new_balance = old_balance - summ
     with open(f'{login}_balance.txt', 'w', encoding='utf-8') as balance:
         balance.write(str(new_balance))
+        balance.close()
         with open(f'{login}_transaction.txt', 'a', encoding='utf-8') as transactions:
             transaction = {'transaction': f'withdrawing {summ}',
                             'date': str(datetime.datetime.now()),
