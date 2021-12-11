@@ -182,7 +182,7 @@ def show_balance(login):
 
 def add_money(login):
     summ = int(input('Input the amount you want to add '))
-    if summ <= 0:
+    if summ < 0:
         raise NegativeMeaning()
     with open(f'{login}_balance.txt', 'r', encoding='utf-8') as balance:
         old_balance = int(balance.readline())
