@@ -50,7 +50,7 @@ class User:
         conn.commit()
 
     def change_password(self, new_password):
-        cur.execute(f"UPDATE users SET password = {new_password} WHERE username = '{self.__username}'")
+        cur.execute(f"UPDATE users SET password = '{new_password}' WHERE username = '{self.__username}'")
         conn.commit()
 
     def block(self):
@@ -417,5 +417,5 @@ def start():
 
 
 if __name__ == '__main__':
-    create_db()
+    #create_db()
     start()
