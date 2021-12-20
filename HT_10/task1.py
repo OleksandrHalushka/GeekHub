@@ -10,7 +10,7 @@ import datetime
 import json
 from collections import Counter
 import requests
-from time import sleep
+
 
 conn = sqlite3.connect('atm.db')
 cur = conn.cursor()
@@ -407,29 +407,6 @@ def today_rate(login, date=datetime.datetime.now().strftime("%d.%m.%Y")):
         start()
     else:
         finish('')
-
-
-def foreign_exchange_menu():
-    currency_choice = input('Please, select currency\n'
-                            '1 for USD\n'
-                            '2 for EUR\n'
-                            '3 for PLZ\n'
-                            '4 for GBP\n'
-                            )
-    currency_choices = {'1': 'USD',
-                        '2': 'EUR',
-                        '3': 'PLN',
-                        '4': 'GBP'}
-    choice = input('For today exchange rates press 1, \n'
-                   'For everyday rate from some date press 2, \n'
-                   'For exchange currency press 3 \n'
-                   'For exit press 4\n')
-
-    choices = {'1': today_rate,
-               '2': rate_from,
-               '3': currency_exchange,
-               '4': finish}
-    choices[choice](currency_choices[currency_choice])
 
 
 def start():
