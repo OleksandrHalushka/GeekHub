@@ -16,12 +16,12 @@ import datetime
 import json
 from collections import Counter
 
-conn = sqlite3.connect('../../HT_10/task1/atm.db')
+conn = sqlite3.connect('atm.db')
 cur = conn.cursor()
 
 
 class User:
-    conn = sqlite3.connect('../../HT_10/task1/atm.db')
+    conn = sqlite3.connect('atm.db')
     cur = conn.cursor()
 
     def __init__(self, username):
@@ -63,7 +63,7 @@ class User:
 
 
 class Atm:
-    conn = sqlite3.connect('../../HT_10/task1/atm.db')
+    conn = sqlite3.connect('atm.db')
     cur = conn.cursor()
 
     def __init__(self):
@@ -92,10 +92,10 @@ class NegativeMeaning(Exception):
 
 
 def create_db():
-    conn = sqlite3.connect('../../HT_10/task1/atm.db')
+    conn = sqlite3.connect('atm.db')
     cur = conn.cursor()
     if input('Would you like to create database? (yes/no)') == 'yes':
-        fop = open('../../HT_10/task1/atm.db', 'w')
+        fop = open('atm.db', 'w')
         fop.close()
         cur.execute("""CREATE TABLE IF NOT EXISTS users(
                user_id INT PRIMARY KEY,
@@ -200,7 +200,7 @@ def unblocker(login):
 
 
 def new_user(login):
-    conn = sqlite3.connect('../../HT_10/task1/atm.db')
+    conn = sqlite3.connect('atm.db')
     cur = conn.cursor()
     users = cur.execute(f"SELECT username FROM users").fetchall()
     for user in users:
