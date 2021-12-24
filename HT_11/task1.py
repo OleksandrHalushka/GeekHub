@@ -44,7 +44,7 @@ def start():
 
 def run_again(user):
     if input('Do you want to do something else?(yes/no)   ') == 'yes':
-        start()
+        menu(user)
     else:
         finish(user)
 
@@ -73,7 +73,7 @@ def users():
                 return user
     else:
         print('Wrong choice, please, select user from 1 to 10')
-        run_again('1')
+        start()
 
 
 def full_info(user):
