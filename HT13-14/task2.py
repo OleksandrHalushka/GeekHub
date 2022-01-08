@@ -29,8 +29,10 @@ if __name__ == "__main__":
     first_person = Person('Dmytro', 45, profession='banker')
     print(first_person.show_age())
     first_person.print_name()
-    print(*first_person.show_all_information())
+    print(*first_person.show_all_information(), sep=' | ')
     second_person = Person('Ivan', 54, surname='Ivanov', profession='seller')
     print(second_person.show_age())
     second_person.print_name()
-    print(*second_person.show_all_information())
+    print(*second_person.show_all_information(), sep=' | ')
+    second_person.city = "Cherkasy"
+    print(*second_person.show_all_information(), sep=' | ')
