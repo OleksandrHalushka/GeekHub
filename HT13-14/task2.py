@@ -6,21 +6,17 @@
 
 
 class Person(object):
-    def __init__(self, **kwargs):
+
+    def __init__(self, name, age, **kwargs):
+        self.age = age
+        self.name = name
         self.__dict__.update(kwargs)
 
     def show_age(self):
-        try:
-            return self.age
-        except:
-            return 'Age is undefined'
+        return self.age
 
     def print_name(self):
-        try:
-            print(self.name)
-        except:
-            print('Name is undefined')
-            return 'Name is undefined'
+        return self.name
 
     def show_all_information(self):
         information = []
@@ -30,11 +26,11 @@ class Person(object):
 
 
 if __name__ == "__main__":
-    first_person = Person(age=21, name='Dmytro', profession='banker')
+    first_person = Person('Dmytro', 45, profession='banker')
     print(first_person.show_age())
     first_person.print_name()
-    print(first_person.show_all_information())
-    second_person = Person(surname='Ivanov', profession='seller')
+    print(*first_person.show_all_information())
+    second_person = Person('Ivan', 54, surname='Ivanov', profession='seller')
     print(second_person.show_age())
     second_person.print_name()
-    print(second_person.show_all_information())
+    print(*second_person.show_all_information())

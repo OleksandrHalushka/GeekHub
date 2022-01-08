@@ -13,51 +13,67 @@ class Calc(object):
     def __init__(self):
         self.last_result = None
 
+    @staticmethod
+    def _to_float(x, y):
+        try:
+            x = float(x)
+            y = float(y)
+            return x, y
+        except:
+            return
+
+    @staticmethod
+    def _to_int(result):
+        if result % 1 == 0:
+            result = int(result)
+        return result
+
     def add(self, x: float or int, y: float or int):
         """Adds y to x and returns result in integer or float type"""
 
-        try:
-            (a, b) = (float(x), float(y))
-        except:
+        if self._to_float(x, y):
+            x, y = self._to_float(x, y)
+            result = x + y
+            self.last_result = self._to_int(result)
+            return self.last_result
+        else:
             return 'Incorrect type'
-        self.last_result = x + y
-        return self.last_result
 
     def subtract(self, x: float or int, y: float or int):
         """Subtracts y from x and returns result in integer or float type"""
 
-        try:
-            (a, b) = (float(x), float(y))
-        except:
+        if self._to_float(x, y):
+            x, y = self._to_float(x, y)
+            result = x - y
+            self.last_result = self._to_int(result)
+            return self.last_result
+        else:
             return 'Incorrect type'
-        self.last_result = x - y
-        return self.last_result
 
     def divide(self, x: float or int, y: float or int):
         """divides x by y and handles division by zero error"""
 
-        try:
-            (a, b) = (float(x), float(y))
-        except:
+        if self._to_float(x, y):
+            x, y = self._to_float(x, y)
+            try:
+                result = x / y
+            except ZeroDivisionError:
+                return 'Division by zero is not possible'
+            self.last_result = self._to_int(result)
+            return self.last_result
+        else:
             return 'Incorrect type'
-        try:
-            result = x / y
-        except ZeroDivisionError:
-            return 'Division by zero is not possible'
-        if result % 1 == 0:
-            result = int(result)
-        self.last_result = result
-        return self.last_result
 
     def multiply(self, x: float or int, y: float or int):
         """Multiplies x by y returns result in integer or float type"""
 
-        try:
-            (a, b) = (float(x), float(y))
-        except:
+        if self._to_float(x, y):
+            x, y = self._to_float(x, y)
+            result = x * y
+            self.last_result = self._to_int(result)
+            return self.last_result
+        else:
             return 'Incorrect type'
-        self.last_result = x * y
-        return self.last_result
 
 
 if __name__ == '__main__':
@@ -73,5 +89,5 @@ if __name__ == '__main__':
     # тестуємо, що останій результат прив"язано до конкретного екземпляру, а не класу в цілому
     second_calk = Calc()
     assert second_calk.last_result is None
-    # тестуємо помилкові дані
-    assert calc.add('asdasdas', 'asdfjnasdiujfiuasd') == 'Incorrect type'
+    assert calc.add('kajsdfoi', 45) == "Incorrect type", calc.last_result == 4
+    assert calc.add('kajsdfoi', 45) == "Incorrect type", calc.last_result == 4
