@@ -8,14 +8,6 @@
 
 import csv
 
-import self as self
-
-from .spiders import vikkanewsscrape
-import pathlib
-import os
-from scrapy.exporters import CsvItemExporter
-from itemadapter import ItemAdapter
-
 
 def write_to_csv(item):
     file = open(f"{item['date']}.csv", 'a', encoding='utf-8')
