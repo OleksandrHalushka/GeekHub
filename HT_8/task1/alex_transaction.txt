@@ -33,3 +33,6 @@
 {"transaction": "withdrawing 300", "date": "2021-12-11 15:29:26.179382", "balance_before": 96117, "balance_after": 95817}
 {"transaction": "withdrawing 50550", "date": "2021-12-11 17:38:04.561262", "balance_before": 95817, "balance_after": 45267}
 {"transaction": "withdrawing 160", "date": "2021-12-12 18:42:03.356012", "balance_before": 45267, "balance_after": 45107}
+{"transaction": "withdrawing 600", "date": "2021-12-20 23:26:13.579460", "balance_before": 45107, "balance_after": 44507}
+{"transaction": "withdrawing 120", "date": "2021-12-20 23:26:27.836510", "balance_before": 44507, "balance_after": 44387}
+{"transaction": "withdrawing 150", "date": "2021-12-20 23:27:16.954621", "balance_before": 44387, "balance_after": 44237}
