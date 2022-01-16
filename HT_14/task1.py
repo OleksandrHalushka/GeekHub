@@ -3,14 +3,11 @@
    - Домашнє завдання №14: Переписати останню версію банкомата з використанням ООП
 """
 
-
-
 import sqlite3
 import datetime
 import json
 from collections import Counter
 import requests
-
 
 conn = sqlite3.connect('atm.db')
 cur = conn.cursor()
@@ -75,10 +72,7 @@ def elements_counter(some_list):
     return counter.most_common()
 
 
-class User(object):
-    conn = sqlite3.connect('atm.db')
-    cur = conn.cursor()
-
+class Person(object):
     def __init__(self, username):
         user = cur.execute(f"SELECT * FROM users WHERE username='{username}'").fetchone()
         self.__user = user
@@ -87,25 +81,40 @@ class User(object):
         self.__balance = self.__user[3]
         self.__status = self.__user[4]
 
+    def change_password(self, new_password):
+        cur.execute(f"UPDATE users SET password = '{new_password}' WHERE username = '{self.__username}'")
+        conn.commit()
+
+    def get_status(self):
+        return self.__status
+
     def get_username(self):
         return self.__username
 
     def get_password(self):
         return self.__password
 
+
+class User(Person):
+    conn = sqlite3.connect('atm.db')
+    cur = conn.cursor()
+
+    def __init__(self, username):
+        super().__init__(username)
+        user = cur.execute(f"SELECT * FROM users WHERE username='{username}'").fetchone()
+        self.__user = user
+        self.__username = self.__user[1]
+        self.__password = self.__user[2]
+        self.__balance = self.__user[3]
+        self.__status = self.__user[4]
+        self.login = username
+
     def get_balance(self):
         return int(self.__balance)
-
-    def get_status(self):
-        return self.__status
 
     def change_balance(self, change):
         new_balance = self.__balance + change
         cur.execute(f"UPDATE users SET balance = {new_balance} WHERE username = '{self.__username}'")
-        conn.commit()
-
-    def change_password(self, new_password):
-        cur.execute(f"UPDATE users SET password = '{new_password}' WHERE username = '{self.__username}'")
         conn.commit()
 
     def block(self):
@@ -115,6 +124,137 @@ class User(object):
     def unblock(self):
         cur.execute(f"UPDATE users SET status = 'Active' WHERE username = '{self.__username}'")
         conn.commit()
+
+    def menu(self):
+        choice = input('if you want:\n'
+                       'Withdraw money - press 1\n'
+                       'Add money on your account - press 2\n'
+                       'Check your account - press 3\n'
+                       'For exchange rates press 4\n'
+                       'For changing password press 5\n'
+                       'For exit press 6\n'
+                       )
+        exchange = Exchange(self.login)
+        if choice == '1':
+            self.withdraw_money(),
+        elif choice == '2':
+            self.add_money(),
+        elif choice == '3':
+            self.show_balance(),
+        elif choice == '4':
+            Exchange.today_rate(),
+        elif choice == '5':
+            self.change_password(),
+        else:
+            ATM.finish()
+
+    def show_balance(self):
+        user = User(self.login)
+        print(user.get_balance())
+        if input('do ypu want to continue (print yes or no)') == 'yes':
+            self.menu()
+        else:
+            ATM.finish(self.login)
+
+    def add_money(self):
+        user = User(self.login)
+        summ = int(input('Input the amount you want to add '))
+        old_balance = user.get_balance()
+        if summ < 0:
+            raise NegativeMeaning()
+        user.change_balance(summ)
+        user = User(self.login)
+        new_balance = user.get_balance()
+        transaction = {'transaction': f'adding {summ}',
+                       'date': str(datetime.datetime.now()),
+                       'balance_before': old_balance,
+                       'balance_after': new_balance}
+        transaction = json.dumps(transaction)
+        cur.execute("INSERT INTO transactions (operation, username)  VALUES (?, ?)", (transaction, self.login))
+        conn.commit()
+        print(f'Thank your for using our ATM, you add {summ}, and now your balance is {new_balance}')
+        if input('do ypu want to continue (print yes or no) ') == 'yes':
+            self.menu()
+        else:
+            ATM.finish()
+
+    def withdraw_money(self):
+        user = User(self.login)
+        atm = Storage()
+        money_in = atm.get_denominations()
+        summ_in = 0
+        for denomination in money_in:
+            if int(money_in[denomination]) != 0:
+                print(f'{denomination}', end=' ')
+                summ_in += int(money_in[denomination]) * int(denomination)
+        print(f'\nYou can take {summ_in}')
+        print(f'You have {user.get_balance()} on your account')
+        summ = int(input('Input the amount you want to withdraw '))
+        if summ <= 0:
+            raise NegativeMeaning()
+        if summ_in < summ:
+            print(f'ATM doesn`t have enough money')
+            if input('do you want to continue (print yes or no)') == 'yes':
+                self.menu()
+            else:
+                ATM.finish()
+        old_balance = user.get_balance()
+        if summ > old_balance:
+            print(f'You don`t have enough money on the balance')
+            if input('do you want to continue (print yes or no)') == 'yes':
+                self.menu()
+            else:
+                ATM.finish()
+        denominations_give = []
+        money_after_give = money_in.copy()
+        summ_to_give = summ
+        iterlist = list(money_in.keys())
+        iterlist.sort(key=lambda x: int(x), reverse=True)
+        while summ_to_give > 0:
+            for denomination in iterlist:
+                if int(money_after_give[denomination]) != 0 and summ_to_give % int(denomination) == 0:
+                    summ_to_give -= int(denomination)
+                    denominations_give.append(int(denomination))
+                    money_after_give[denomination] -= 1
+                else:
+                    continue
+                break
+            else:
+                print('ATM can`t give you that summ')
+                if input('do you want to continue (print yes or no)') == 'yes':
+                    self.menu()
+                else:
+                    ATM.finish()
+                    break
+        user.change_balance(-summ)
+        user = User(self.login)
+        new_balance = user.get_balance()
+        transaction = {'transaction': f'withdrawing {summ}',
+                       'date': str(datetime.datetime.now()),
+                       'balance_before': old_balance,
+                       'balance_after': new_balance}
+        transaction = json.dumps(transaction)
+        cur.execute("INSERT INTO transactions (operation, username)  VALUES (?, ?)", (transaction, self.login))
+        conn.commit()
+        print(f'You received')
+        for element in elements_counter(denominations_give):
+            print(f'{element[0]} - {element[1]} bills')
+        print(f'Thank your for using our ATM, you withdraw {summ}, and now your balance is {new_balance}')
+        atm.change(money_after_give)
+        if input('do ypu want to continue (print yes or no) ') == 'yes':
+            self.menu()
+        else:
+            ATM.finish()
+
+    def change_password(self):
+        user = Person(self.login)
+        new_password = password_validator()
+        user.change_password(new_password)
+        print('Your password was changed!')
+        if input('Do you want to continue? (yes/no)') == 'yes':
+            self.menu()
+        else:
+            ATM.finish()
 
 
 class Storage(object):
@@ -178,10 +318,14 @@ class Authentication(object):
             print('Sorry, answer is incorrect, try again later!')
 
     def authenticate(self):
-        user = User(self.login)
+        user = Person(self.login)
+        if user.get_status() == 'Active':
+            user = User(self.login)
+        else:
+            user = Collector(self.login)
         for attempt in range(3):
             if user.get_password() == input(f'Input your password, you have {3 - attempt} attempts '):
-                return True
+                return user
             else:
                 if attempt != 2:
                     print(f'Incorrect password, try again, you have {2 - attempt} attempts ')
@@ -190,13 +334,19 @@ class Authentication(object):
                     self.block()
 
 
-class CollectorsChoices(object):
+class Collector(Person):
 
-    def __init__(self, login):
-        self.login = login
+    def __init__(self, username):
+        super().__init__(username)
+        user = cur.execute(f"SELECT * FROM users WHERE username='{username}'").fetchone()
+        self.__user = user
+        self.__username = self.__user[1]
+        self.__password = self.__user[2]
+        self.__balance = self.__user[3]
+        self.__status = self.__user[4]
+        self.login = username
 
     def incasation(self):
-        menu = Menu(self.login)
         atm = Storage()
         money_in = atm.get_denominations()
         addmoney = money_in.copy()
@@ -207,189 +357,26 @@ class CollectorsChoices(object):
             addmoney[denomination] += add
         atm.change(addmoney)
         print('Money loaded successfully!')
-        menu.collectors_menu()
-
+        self.menu()
 
     def checking_denominations(self):
         atm = Storage()
-        menu = Menu(self.login)
         money_in = atm.get_denominations()
         for denomination in money_in:
             print(f'{denomination}: {money_in[denomination]}')
-        menu.collectors_menu()
-
-
-    def change_password(self):
-        menu = Menu(self.login)
-        new_password = password_validator()
-        user = User(self.login)
-        user.change_password(new_password)
-        print('Your password was changed!')
-        if input('Do you want to continue? (yes/no)') == 'yes':
-            menu.collectors_menu()
-        else:
-            ATM.finish(self)
-
-
-class UserChoices(object):
-    def __init__(self, login):
-        self.login = login
-        self.menu = Menu(login)
-    def show_balance(self):
-        user = User(self.login)
-        print(user.get_balance())
-        if input('do ypu want to continue (print yes or no)') == 'yes':
-            self.menu.menu()
-        else:
-            ATM.finish(self.login)
-
-
-    def add_money(self):
-        menu = Menu(self.login)
-        user = User(self.login)
-        summ = int(input('Input the amount you want to add '))
-        old_balance = user.get_balance()
-        if summ < 0:
-            raise NegativeMeaning()
-        user.change_balance(summ)
-        user = User(self.login)
-        new_balance = user.get_balance()
-        transaction = {'transaction': f'adding {summ}',
-                        'date': str(datetime.datetime.now()),
-                        'balance_before': old_balance,
-                        'balance_after': new_balance}
-        transaction = json.dumps(transaction)
-        cur.execute("INSERT INTO transactions (operation, username)  VALUES (?, ?)", (transaction, self.login))
-        conn.commit()
-        print(f'Thank your for using our ATM, you add {summ}, and now your balance is {new_balance}')
-        if input('do ypu want to continue (print yes or no) ') == 'yes':
-            menu.menu()
-        else:
-            ATM.finish()
-
-
-    def withdraw_money(self):
-        menu = Menu(self.login)
-        user = User(self.login)
-        atm = Storage()
-        money_in = atm.get_denominations()
-        summ_in = 0
-        for denomination in money_in:
-            if int(money_in[denomination]) != 0:
-                print(f'{denomination}', end=' ')
-                summ_in += int(money_in[denomination]) * int(denomination)
-        print(f'\nYou can take {summ_in}')
-        print(f'You have {user.get_balance()} on your account')
-        summ = int(input('Input the amount you want to withdraw '))
-        if summ <= 0:
-            raise NegativeMeaning()
-        if summ_in < summ:
-            print(f'ATM doesn`t have enough money')
-            if input('do you want to continue (print yes or no)') == 'yes':
-                menu.menu()
-            else:
-                ATM.finish()
-        old_balance = user.get_balance()
-        if summ > old_balance:
-            print(f'You don`t have enough money on the balance')
-            if input('do you want to continue (print yes or no)') == 'yes':
-                menu.menu()
-            else:
-                ATM.finish()
-        denominations_give = []
-        money_after_give = money_in.copy()
-        summ_to_give = summ
-        iterlist = list(money_in.keys())
-        iterlist.sort(key=lambda x: int(x), reverse=True)
-        while summ_to_give > 0:
-            for denomination in iterlist:
-                if int(money_after_give[denomination]) != 0 and summ_to_give % int(denomination) == 0:
-                    summ_to_give -= int(denomination)
-                    denominations_give.append(int(denomination))
-                    money_after_give[denomination] -= 1
-                else:
-                    continue
-                break
-            else:
-                print('ATM can`t give you that summ')
-                if input('do you want to continue (print yes or no)') == 'yes':
-                    menu.menu()
-                else:
-                    ATM.finish()
-                    break
-        user.change_balance(-summ)
-        user = User(self.login)
-        new_balance = user.get_balance()
-        transaction = {'transaction': f'withdrawing {summ}',
-                        'date': str(datetime.datetime.now()),
-                        'balance_before': old_balance,
-                        'balance_after': new_balance}
-        transaction = json.dumps(transaction)
-        cur.execute("INSERT INTO transactions (operation, username)  VALUES (?, ?)", (transaction, self.login))
-        conn.commit()
-        print(f'You received')
-        for element in elements_counter(denominations_give):
-            print(f'{element[0]} - {element[1]} bills')
-        print(f'Thank your for using our ATM, you withdraw {summ}, and now your balance is {new_balance}')
-        atm.change(money_after_give)
-        if input('do ypu want to continue (print yes or no) ') == 'yes':
-            menu.menu()
-        else:
-            ATM.finish()
-
-    def change_password(self):
-        menu = Menu(self.login)
-        new_password = password_validator()
-        user = User(self.login)
-        user.change_password(new_password)
-        print('Your password was changed!')
-        if input('Do you want to continue? (yes/no)') == 'yes':
-            menu.menu()
-        else:
-            ATM.finish()
-
-
-class Menu(object):
-
-    def __init__(self, login):
-        self.login = login
+        self.menu()
 
     def menu(self):
-        choice = input('if you want:\n'
-                       'Withdraw money - press 1\n'
-                       'Add money on your account - press 2\n'
-                       'Check your account - press 3\n'
-                       'For exchange rates press 4\n'
-                       'For changing password press 5\n'
-                       'For exit press 6\n'
-                       )
-        exchange = Exchange(self.login)
-        choices = UserChoices(self.login)
-        if choice == '1':
-            choices.withdraw_money(),
-        elif choice == '2':
-            choices.add_money(),
-        elif choice == '3':
-            choices.show_balance(),
-        elif choice == '4':
-            exchange.today_rate(),
-        elif choice == '5':
-            choices.change_password(),
-        else:
-            ATM.finish()
-
-
-    def collectors_menu(self):
         choice = input('if you want:\n'
                        'add money in atm 1\n'
                        'check for denominations in ATM - press 2\n'
                        'For exit press 3\n'
                        )
-        choices = CollectorsChoices(self.login)
+
         if choice == '1':
-            choices.incasation(),
+            self.incasation(),
         elif choice == '2':
-            choices.checking_denominations(),
+            self.checking_denominations(),
         else:
             ATM.finish(),
 
@@ -399,7 +386,6 @@ class Exchange(object):
         self.login = login
 
     def today_rate(self, date=datetime.datetime.now().strftime("%d.%m.%Y")):
-        menu = Menu(self.login)
         atm = ATM()
         currency_choices = {'1': 'USD',
                             '2': 'EUR',
@@ -419,48 +405,50 @@ class Exchange(object):
                               f'Nbu - {next_currency["saleRateNB"]}\n'
                               f'-------------------')
         if input('Do you want to continiue? ') == 'yes':
-            menu.menu()
+            atm.menu()
         else:
             atm.finish('')
 
 
 class ATM(object):
-    def start(self):
-        if input('Do you have an account? (print yes or no) ') == 'yes':
-            login = input('Hello, please input your login: ')
-            try:
-                user = User(login)
-            except:
-                if input('User not found, do you want to continue? (yes/no)') == 'yes':
-                    self.start()
-                else:
-                    self.finish(login)
-            else:
-                user = User(login)
-                auth = Authentication(login)
-                user_status = user.get_status()
-                menu = Menu(login)
-                if user_status == 'Active':
-                    if auth.authenticate():
-                        menu.menu()
-                if user_status == 'Collector':
-                    if auth.authenticate():
-                        menu.collectors_menu()
-                if user_status == 'Blocked':
-                    if input('Your account was blocked, do you want to try to unblock? (yes / no )') == 'yes':
-                        auth.unblock()
 
+    def menu(self, exchange=Exchange('')):
+        choice = input('1 for exchange\n'
+                       '2 for login\n'
+                       '3 for registrate new account\n'
+                       '4 for exit\n')
+        if choice == '1':
+            exchange.today_rate()
+        elif choice == '2':
+            self.start()
+        elif choice == '3':
+            self.new_user()
         else:
-            if input('Do you want to register an account?(print yes or no) ') == 'yes':
-                login = input('Input your login here ')
-                self.new_user(login)
-            else:
-                self.finish()
+            self.finish()
 
-    def new_user(self, login):
+    def start(self):
+        login = input('Hello, please input your login: ')
+        try:
+            user = Person(login)
+        except:
+            if input('User not found, do you want to continue? (yes/no)') == 'yes':
+                self.start()
+            else:
+                self.finish(login)
+        else:
+            auth = Authentication(login)
+            if user.get_status() == 'Blocked':
+                if input('Your account was blocked, do you want to try to unblock? (yes / no )') == 'yes':
+                    auth.unblock()
+            else:
+                user = auth.authenticate()
+                user.menu()
+
+    def new_user(self):
         conn = sqlite3.connect('atm.db')
         cur = conn.cursor()
         users = cur.execute(f"SELECT username FROM users").fetchall()
+        login = input('Input your login here ')
         for user in users:
             if user[0] == login:
                 print(f'Name {login} was already taken')
@@ -485,4 +473,4 @@ class ATM(object):
 
 if __name__ == '__main__':
     atm = ATM()
-    atm.start()
+    atm.menu()
