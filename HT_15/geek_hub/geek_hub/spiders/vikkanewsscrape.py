@@ -1,10 +1,6 @@
-from requests import Request
-
 import scrapy
 import datetime
-
 from ..items import VikkaNewsItem
-
 from bs4 import BeautifulSoup
 
 
