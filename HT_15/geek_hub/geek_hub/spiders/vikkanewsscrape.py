@@ -29,7 +29,7 @@ class VikkaNewsScrapeSpider(scrapy.Spider):
                 return date
         except LaterDate:
             print('Inputted date is later than today!')
-        except ValueError:
+        except:
             print('Wrong date')
 
     def start_requests(self):
