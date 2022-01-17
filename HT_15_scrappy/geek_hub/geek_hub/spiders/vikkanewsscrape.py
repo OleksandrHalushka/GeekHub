@@ -66,6 +66,5 @@ class VikkaNewsScrapeSpider(scrapy.Spider):
         items['article'] = article
         items['tags'] = ', '.join([f'#{i.text}' for i in soup.select('.post-tag')])
         items['url'] = news.url
-        items['date'] = name
 
         return items
