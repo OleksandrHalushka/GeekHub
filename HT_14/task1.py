@@ -142,7 +142,7 @@ class User(Person):
         elif choice == '3':
             self.show_balance(),
         elif choice == '4':
-            Exchange.today_rate(),
+            exchange.today_rate(),
         elif choice == '5':
             self.change_password(),
         else:
@@ -404,10 +404,17 @@ class Exchange(object):
                               f'Purchase - {next_currency["saleRate"]}\n'
                               f'Nbu - {next_currency["saleRateNB"]}\n'
                               f'-------------------')
-        if input('Do you want to continiue? ') == 'yes':
-            atm.menu()
+        if self.login != '':
+            user = User(self.login)
+            if input('Do you want to continiue? ') == 'yes':
+                user.menu()
+            else:
+                atm.finish('')
         else:
-            atm.finish('')
+            if input('Do you want to continiue? ') == 'yes':
+                atm.menu()
+            else:
+                atm.finish('')
 
 
 class ATM(object):
