@@ -12,7 +12,7 @@ import csv
 def write_to_csv(item):
     file = open(f"{item['date']}.csv", 'a', encoding='utf-8')
     writer = csv.writer(file)
-    writer.writerow([item[key] for key in item.keys()])
+    writer.writerow([item[key] for key in item.keys() if key != 'date'])
 
 
 class GeekHubPipeline:

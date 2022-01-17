@@ -11,3 +11,4 @@ class VikkaNewsItem(scrapy.Item):
     article = scrapy.Field()
     tags = scrapy.Field()
     url = scrapy.Field()
+    date = scrapy.Field()
