@@ -15,9 +15,8 @@ class GeekHubPipeline:
     cur = conn.cursor()
 
     def open_spider(self, spider):
-        conn = sqlite3.connect("news.db")
-        cur = conn.cursor()
-        cur.execute("""CREATE TABLE IF NOT EXISTS news(
+
+        self.cur.execute("""CREATE TABLE IF NOT EXISTS news(
                        id INTEGER PRIMARY KEY,
                        title TEXT,
                        article TEXT,
