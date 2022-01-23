@@ -24,7 +24,7 @@ def chrome_table():
     button = driver.find_element(
         By.CSS_SELECTOR, 'span[class="appsMaterialWizButtonPaperbuttonContent exportButtonContent"]')
     button.click()
-    driver.get_screenshot_as_file('sent_form.png')
+    driver.save_screenshot('sent_form.png')
 
 
 if __name__ == "__main__":
