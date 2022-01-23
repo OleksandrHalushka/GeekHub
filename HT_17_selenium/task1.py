@@ -14,9 +14,8 @@ def chrome_table():
     link = "https://docs.google.com/forms/d/e/1FAIpQLScLhHgD5pMnwxl8JyRfXXsJekF8_pDG36XtSEwaGsFdU2egyw/viewform?usp=sf_link"
 
     driver = webdriver.Chrome()
-    waiting = WebDriverWait(driver, 10)
     driver.get(link)
-    input_name = waiting.until(
+    input_name = WebDriverWait(driver, 1).until(
         expected_conditions.element_to_be_clickable((
             By.CSS_SELECTOR, 'input[class="quantumWizTextinputPaperinputInput exportInput"]')))
     input_name.click()
