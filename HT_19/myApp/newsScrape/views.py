@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .forms import CategoryForm
 from .models import *
-from .models import Askstory, Showstory, Jobstory, Newstory, News
+from .models import Askstory, Showstory, Jobstory, Newstory
 import requests
 
 
@@ -22,29 +22,32 @@ class NewsFromApi(object):
         object_category = self.categories[self.category]()
 
         for article in articles:
-            try:
-                news = News.objects.get(id=article).exists()
-
-            except:
+            if Askstory.objects.filter(id=article).count() != 0 \
+                    or Showstory.objects.filter(id=article).count() != 0 \
+                    or Newstory.objects.filter(id=article).count() != 0 \
+                    or Jobstory.objects.filter(id=article).count() != 0:
+                continue
+            else:
                 url = f'https://hacker-news.firebaseio.com/v0/item/{article}.json'
                 answer = requests.get(url=url).json()
                 if not answer:
                     continue
                 else:
-
                     object_category.id = answer.get("id")
                     object_category.by = answer.get("by")
-                    object_category.descendants = answer.get("descendants")
                     object_category.score = answer.get("score")
                     object_category.text = answer.get("text")
                     object_category.time = answer.get("time")
                     object_category.title = answer.get("title")
                     object_category.type = answer.get("type")
+                if self.category == 'askstories':
+                    object_category.descendants = answer.get("descendants")
+                elif self.category == 'showstories' or self.category == 'newstories':
                     object_category.url = answer.get("url")
-                    news = News()
-                    news.id = answer.get("id")
-                    object_category.save()
-                    news.save()
+                    object_category.descendants = answer.get("descendants")
+                elif self.category == 'jobstories':
+                    object_category.url = answer.get("url")
+                object_category.save()
 
 
 def index(request):
