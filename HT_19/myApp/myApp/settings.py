@@ -53,6 +53,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+SECRET_KEY = 'django-insecure-blo6x1_ss*23(ftn_!=0p820qfvdsg6!ov^j7#$c5cv66_7zsd'
+
 ROOT_URLCONF = 'myApp.urls'
 
 TEMPLATES = [
