@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+   <div>
+        {% if authenticated %}
+        <div>
+            <p>{{user.first_name}} {{user.last_name}}</p>
+            <button><a href="{% url 'logout' %}">log-out</a></button>
+            <button><a href="{% url 'basket' %}">Basket</a></button>
+        </div>
+
+        {% else %}
+            <button><a href="{% url 'login' %}">Log-In</a></button>
+        {%  endif %}
+    </div>
+    <div style="display: inline-block">
+        <a href="{% url 'index'%} ">All products</a>
+        <a href="{% url 'category'%}?category=TC ">Technic</a>
+        <a href="{% url 'category'%}?category=MB ">Mobile</a>
+        <a href="{% url 'category'%}?category=TV ">Television</a>
+    </div>
+    <div>
+        {% for basket in baskets %}
+            <div style="
+                        padding: 20px;
+                        margin-right: 10px;
+                        margin-bottom: 10px;
+                        outline: 1px solid #666;
+                        background: #f0f0f0;
+                        ">
+                {{basket.products.title}}
+                {{basket.products.price}}$
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
