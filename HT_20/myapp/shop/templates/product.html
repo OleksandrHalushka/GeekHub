@@ -61,7 +61,7 @@
 
 </body>
 <script>
-  $(document).on("click","#cart",function(){
+  $(document).on("onclick","#cart",function(){
   event.preventDefault();
   var product_id = $("#product-id").val();
   var url = $("#cart").attr('action');
@@ -70,15 +70,19 @@
      'product_id': product_id,
      'csrfmiddlewaretoken': $('#cart input[name="csrfmiddlewaretoken"]').val(),
   };
-
     $.ajax({
       type: 'POST',
       url: url,
       data: data,
       dataType: 'json',
     });
-    alert("Product added to cart!")
-  });
+        success: function (response) {
+            alert("Product added to card");
+                },
+        error: function (response) {
+            alert(response.responseJSON.errors);
+            }
+        });
 
 </script>
 </html>
