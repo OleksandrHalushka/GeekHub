@@ -1,12 +1,23 @@
 from django.contrib.auth import authenticate, login, logout
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from .models import Product, ShopBasked
+from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .models import Product
 from .forms import LoginForm
 from django.contrib.auth.decorators import permission_required
+from .serializer import ProductSerializer
+
+
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
 
 def index(request):
-
     is_logined = request.user.is_authenticated
     user = request.user
     categories = ('Technic', 'Mobile', 'Television')
@@ -85,22 +96,23 @@ def edite_product(request):
     return redirect(f'/admin/shop/product/{product_id}/change/')
 
 
-def buy(request):
-    product_id = request.GET.get('id')
-    product = Product.objects.get(id=product_id)
-    user = request.user
-    basket = ShopBasked()
-    basket.user = user
-    basket.products = product
-    basket.save()
-    return redirect('index')
-
-
-def basket(request):
-    user = request.user
-    is_logined = request.user.is_authenticated
-    baskets = ShopBasked.objects.all().filter(user=user)
-    context = {'authenticated': is_logined,
-               'user': user,
-               'baskets': baskets,}
-    return render(request, "basket.html", context)
+def cart(request):
+    if request.method == 'POST':
+        product_id = request.POST.get('product_id')
+        cart = request.session.setdefault('cart', {})
+        if product_id:
+            products = cart.setdefault('product', [])
+            products.append(product_id)
+            request.session.modified = True
+        return JsonResponse({'products': request.session['cart']}, status=200)
+    else:
+        try:
+            id_products = request.session['cart']['product']
+        except:
+            user = request.user
+            return render(request, 'cart.html', {'message': 'Cart is empty', 'user': user})
+        products = []
+        for id in id_products:
+            product = Product.objects.filter(id=id)[0]
+            products.append(product)
+        return render(request, 'cart.html', {'products': products})

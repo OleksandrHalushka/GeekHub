@@ -20,12 +20,3 @@ class Product(models.Model):
     price = models.FloatField(default=0)
     class Meta:
         verbose_name_plural = 'Products'
-
-
-class ShopBasked(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    products = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
-    count = models.IntegerField(default=1)
-
-    class Meta:
-        verbose_name_plural = 'Baskets'

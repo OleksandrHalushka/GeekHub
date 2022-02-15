@@ -6,11 +6,11 @@
 </head>
 <body>
    <div>
-        {% if authenticated %}
+        {% if user.is_authenticated %}
         <div>
             <p>{{user.first_name}} {{user.last_name}}</p>
             <button><a href="{% url 'logout' %}">log-out</a></button>
-            <button><a href="{% url 'basket' %}">Basket</a></button>
+            <button><a href="{% url 'cart' %}">Cart</a></button>
         </div>
 
         {% else %}
@@ -24,7 +24,10 @@
         <a href="{% url 'category'%}?category=TV ">Television</a>
     </div>
     <div>
-        {% for basket in baskets %}
+        {% if message %}
+            <H1>{{message}}</H1>
+        {%  endif %}
+        {% for product in products %}
             <div style="
                         padding: 20px;
                         margin-right: 10px;
@@ -32,8 +35,8 @@
                         outline: 1px solid #666;
                         background: #f0f0f0;
                         ">
-                {{basket.products.title}}
-                {{basket.products.price}}$
+                {{product.title}}
+                {{product.price}}$
             </div>
         {% endfor %}
     </div>

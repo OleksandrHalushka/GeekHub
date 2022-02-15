@@ -10,7 +10,7 @@
         <div>
             <p>{{user.first_name}} {{user.last_name}}</p>
             <button><a href="{% url 'logout' %}">log-out</a></button>
-            <button><a href="{% url 'basket' %}">Basket</a></button>
+            <button><a href="{% url 'cart' %}">Сart</a></button>
         </div>
 
         {% else %}
@@ -39,7 +39,11 @@
                 <div>Price: {{ product.price }}$</div>
                 {% if authenticated %}
                     <div>
-                        <button><a href="{% url 'buy' %}?id={{product.id}} ">Buy</a></button>
+                        <form action='{% url "cart" %}' method="post">
+                        {% csrf_token %}
+                        <input type="hidden" class="product" name="product_id" value="{{ product.id }}">
+                        <button id="cart" type="submit" data-href="{% url 'cart' %}"> Add to cart</button>
+                        </form>
                         {% if super%}
                             <button><a href="{% url 'edite' %}?id={{product.id}} ">Edit</a></button>
                             <button><a href="{% url 'delete' %}?id={{product.id}} ">Delete</a></button>
@@ -56,4 +60,25 @@
 
 
 </body>
+<script>
+  $(document).on("click","#cart",function(){
+  event.preventDefault();
+  var product_id = $("#product-id").val();
+  var url = $("#cart").attr('action');
+  console.log(product_id);
+  data = {
+     'product_id': product_id,
+     'csrfmiddlewaretoken': $('#cart input[name="csrfmiddlewaretoken"]').val(),
+  };
+
+    $.ajax({
+      type: 'POST',
+      url: url,
+      data: data,
+      dataType: 'json',
+    });
+    alert("Product added to cart!")
+  });
+
+</script>
 </html>

@@ -10,7 +10,7 @@
         <div>
             <p>{{user.first_name}} {{user.last_name}}</p>
             <button><a href="{% url 'logout' %}">log-out</a></button>
-            <button><a href="{% url 'basket' %}">Basket</a></button>
+            <button><a href="{% url 'cart' %}">Сart</a></button>
         </div>
 
         {% else %}
@@ -42,4 +42,5 @@
     </div>
 
 </body>
+
 </html>
