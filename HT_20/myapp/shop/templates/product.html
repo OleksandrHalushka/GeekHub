@@ -61,8 +61,8 @@
 
 </body>
 <script>
-  $(document).on("onclick","#cart",function(){
-  event.preventDefault();
+  $(document).on("onclick","#cart", function(e){
+  e.preventDefault();
   var product_id = $("#product-id").val();
   var url = $("#cart").attr('action');
   console.log(product_id);
