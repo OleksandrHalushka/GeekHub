@@ -1,0 +1,2 @@
+h = int(input('From 3 to 100))  '))  # height, but with full name the instruction does not fit into 79 characters
+print(*[f"{'**' * i}*".center(h * 2 - 1) for i in range(h)], sep='\n', end='\n' + '*****'.center(h * 2 - 1))
